@@ -8,3 +8,8 @@ spring:
       driver-class-name: com.mysql.cj.jdbc.Driver
       username: root
       password: root
+    salve:
+      url: jdbc:mysql://121.36.202.6:3306/salve?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: root
+      password: root
