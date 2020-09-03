@@ -8,6 +8,7 @@
       <list>
         <option value="$PROJECT_DIR$/springboot-mybatis/pom.xml" />
         <option value="$PROJECT_DIR$/springboot-redis/pom.xml" />
+        <option value="$PROJECT_DIR$/springboot-kafka/pom.xml" />
       </list>
     </option>
   </component>

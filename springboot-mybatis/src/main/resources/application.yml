@@ -1,12 +1,12 @@
 spring:
   datasource:
     slave:
-      url: jdbc:mysql://121.36.202.6:3306/master?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false
+      url: jdbc:mysql://localhost:3306/master?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false
       username: root
       password: root
       driver-class-name: com.mysql.cj.jdbc.Driver
     master:
-      url: jdbc:mysql://121.36.202.6:3306/master?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false
+      url: jdbc:mysql://localhost:3306/master?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false
       username: root
       password: root
       driver-class-name: com.mysql.cj.jdbc.Driver

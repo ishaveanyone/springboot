@@ -8,15 +8,18 @@
         <outputRelativeToContentRoot value="true" />
         <module name="springboot-redis" />
         <module name="springboot-mybatis" />
+        <module name="springboot-kafka" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="springboot-kafka" target="1.8" />
       <module name="springboot-mybatis" target="1.8" />
       <module name="springboot-redis" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="springboot-kafka" options="-parameters" />
       <module name="springboot-mybatis" options="-parameters" />
       <module name="springboot-redis" options="-parameters" />
     </option>
