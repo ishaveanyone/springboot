@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-@EnableScheduling
-@MapperScan(basePackages = "com.xupp.springbootmybatis.mapper.master")
+//@EnableScheduling
+@MapperScan(basePackages = "com.xupp.springbootmybatis.mapper")
 public class SpringbootMybatisApplication {
 
     public static void main(String[] args) {

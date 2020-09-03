@@ -18,7 +18,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-
     //主节点进行更新
     @PostMapping("/user")
     public Object save(String name){
