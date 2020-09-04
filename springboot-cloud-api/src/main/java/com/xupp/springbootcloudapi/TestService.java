@@ -8,5 +8,11 @@
  */
 package com.xupp.springbootcloudapi;
 
+import org.springframework.cloud.openfeign.FeignClient;
+
+@FeignClient(
+        value = "provider",
+        path = "/test"
+)
 public interface TestService {
 }

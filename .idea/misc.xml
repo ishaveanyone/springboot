@@ -13,6 +13,7 @@
         <option value="$PROJECT_DIR$/spring-cloud-provider/pom.xml" />
         <option value="$PROJECT_DIR$/springboot-cloud-consumer/pom.xml" />
         <option value="$PROJECT_DIR$/springboot-cloud-api/pom.xml" />
+        <option value="$PROJECT_DIR$/springboot-cloud-provider/pom.xml" />
       </list>
     </option>
   </component>
