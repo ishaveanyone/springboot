@@ -9,6 +9,10 @@
         <option value="$PROJECT_DIR$/springboot-mybatis/pom.xml" />
         <option value="$PROJECT_DIR$/springboot-redis/pom.xml" />
         <option value="$PROJECT_DIR$/springboot-kafka/pom.xml" />
+        <option value="$PROJECT_DIR$/springboot-fegin/pom.xml" />
+        <option value="$PROJECT_DIR$/spring-cloud-provider/pom.xml" />
+        <option value="$PROJECT_DIR$/springboot-cloud-consumer/pom.xml" />
+        <option value="$PROJECT_DIR$/springboot-cloud-api/pom.xml" />
       </list>
     </option>
   </component>

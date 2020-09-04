@@ -1,0 +1,22 @@
+management:
+  endpoints:
+    web:
+      base-path: /author # 使用这个方式修改监控上下文
+eureka:
+  instance:
+    health-check-url-path: ${management.endpoints.web.base-path}/health
+    status-page-url-path: ${management.endpoints.web.base-path}/info # 相对路径配置
+    # status-page-url: 这个是绝对路径配置的方式
+    hostname: localhost
+  client:
+    service-url:
+      defaultZone: http://localhost:8080/eureka
+    region: local
+    availability-zones:
+      local: defaultZone
+    prefer-same-zone-eureka: true # 如果是 true 那么通过region 找到对应 zone 并通过zone 找到对应url进行注册 ，并且不会继续注册到其他注册中心并维护心跳  如果是false 那么注册到serviceUrl第一个上 ，并且 不会继续往下注册 并且维护心跳
+server:
+  port: 8083
+spring:
+  application:
+    name: provider

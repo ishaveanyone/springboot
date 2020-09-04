@@ -3,6 +3,10 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/springboot.iml" filepath="$PROJECT_DIR$/.idea/springboot.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springboot-cloud-api/springboot-cloud-api.iml" filepath="$PROJECT_DIR$/springboot-cloud-api/springboot-cloud-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springboot-cloud-consumer/springboot-cloud-consumer.iml" filepath="$PROJECT_DIR$/springboot-cloud-consumer/springboot-cloud-consumer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springboot-cloud-provider/springboot-cloud-provider.iml" filepath="$PROJECT_DIR$/springboot-cloud-provider/springboot-cloud-provider.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springboot-fegin/springboot-fegin.iml" filepath="$PROJECT_DIR$/springboot-fegin/springboot-fegin.iml" />
       <module fileurl="file://$PROJECT_DIR$/springboot-kafka/springboot-kafka.iml" filepath="$PROJECT_DIR$/springboot-kafka/springboot-kafka.iml" />
       <module fileurl="file://$PROJECT_DIR$/springboot-mybatis/springboot-mybatis.iml" filepath="$PROJECT_DIR$/springboot-mybatis/springboot-mybatis.iml" />
       <module fileurl="file://$PROJECT_DIR$/springboot-redis/springboot-redis.iml" filepath="$PROJECT_DIR$/springboot-redis/springboot-redis.iml" />
