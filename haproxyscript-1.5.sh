@@ -16,7 +16,6 @@ stop(){
     done
     if [ ${srv_op_state_index} = -1 ]; then
         echo "下标 $srv_op_state_index,检查服务器是否安装haproxy 或者 socat软件"
-        return 0
     fi
     echo "执行 echo show stat | socat stdio $haproxy_sock_path|grep .*$backend.*$server_name|sed 's/,,/,1,/g'"
     #把字符串添加字符转标准的可以处理成数组的字符串
@@ -34,12 +33,10 @@ stop(){
     data_array=(` echo ${data_array_str}|sed 's/,/ /g'`)
     if [ ${#data_array[@]} = 0 ]; then
         echo "服务 $backend/$server_name 不存在，请检查服务名！"
-        return 0
     fi
     echo "值 ${data_array[srv_op_state_index]}"
     if [[ ${data_array[srv_op_state_index]} = "MAINT" ]]; then
         echo "服务已经停止。。。"
-        return 1
     else
         eval `echo "disable server $backend/$server_name" | socat stdio $haproxy_sock_path`
     fi
@@ -57,7 +54,6 @@ stop(){
         sleep 1
     done
     echo "停止成功~~"
-    return 1
 }
 
 start(){
@@ -74,7 +70,6 @@ start(){
     echo "下标 $srv_op_state_index"
     if [ ${srv_op_state_index} = -1 ]; then
         echo "下标 $srv_op_state_index,检查服务器是否安装haproxy 或者 socat软件"
-        return 0
     fi
     echo "执行 echo "show servers state" | socat stdio $haproxy_sock_path|grep .*$backend.*$server_name|tr ',' ' '"
     #把字符串添加字符转标准的可以处理成数组的字符串
@@ -92,12 +87,10 @@ start(){
     data_array=(` echo ${data_array_str}|sed 's/,/ /g'`)
     if [ ${#data_array[@]} = 0 ]; then
         echo "服务 *$backend/$server_name 不存在，请检查服务名！"
-        return 0
     fi
     echo "值 ${data_array[srv_op_state_index]}"
     if [[ ${data_array[$srv_op_state_index]} = "UP" ]]; then
         echo "服务已经启动。。。"
-        return 1
     else
         eval `echo "enable server $backend/$server_name" | socat stdio $haproxy_sock_path`
     fi
@@ -114,7 +107,6 @@ start(){
         sleep 1
     done
     echo "启动成功~~"
-    return 1;
 }
 
 
@@ -127,7 +119,6 @@ restart(){
     stop_state=`echo $?`
     if [[ ${stop_state} = 0 ]]; then
         echo "停止服务失败"
-        return 0
     fi
     echo "停止成功"
     echo "重启服务"
@@ -135,10 +126,8 @@ restart(){
     start_state=`echo $?`
     if [[ ${start_state} = 0 ]]; then
         echo "启动服务失败"
-        return 0
     fi
     echo "重启成功"
-    return 1;
 }
 
 
