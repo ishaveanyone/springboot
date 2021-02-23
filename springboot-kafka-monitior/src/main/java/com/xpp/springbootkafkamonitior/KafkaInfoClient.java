@@ -1,0 +1,61 @@
+/**
+ * Date: 2021-02-22 10:48
+ * Author: xupp
+ */
+
+package com.xpp.springbootkafkamonitior;
+
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.TopicPartition;
+import org.apache.kafka.common.requests.MetadataResponse;
+
+
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
+/**
+ * 用于获取kafka 指定topic partion对应的数据情况
+ */
+public class KafkaInfoClient{
+    public static  KafkaConsumer<String, String> consumer = new KafkaConsumer<>(new Properties(){{
+       put("bootstrap.servers", "127.0.0.1:9092");
+       put("group.id", "test-monitor");
+       put("enable.auto.commit", "false");
+       put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+       put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+    }});
+    public static void main(String[] args) {
+
+        while (true) {
+            try {
+                List<TopicPartition> tps = Optional.ofNullable(consumer.partitionsFor("monitor"))
+                        .orElse(Collections.emptyList())
+                        .stream()
+                        .map(info -> new TopicPartition(info.topic(), info.partition()))
+                        .collect(Collectors.toList());
+                Map<TopicPartition, Long> endOffsets = consumer.endOffsets(tps);
+                Map<TopicPartition, Long> beginOffsets = consumer.beginningOffsets(tps);
+                //尝试打印 每一个tp 没有消费的消息数量
+                for (TopicPartition tp : tps) {
+                    Long start = 0L;//获取即将
+                    if(consumer.committed(tp)!=null){
+                        start = consumer.committed(tp).offset();
+                    }
+
+                    Long begin = beginOffsets.get(tp);//获取即将
+                    Long end = endOffsets.get(tp);
+                    StringBuffer sb=new StringBuffer();
+                    sb.append(tp.partition() + "待消费的消息数量:" + (end - start)+"     ");
+                    sb.append(tp.partition() + "已经收取到的总消息数量 ： " + (end - begin));
+                    System.out.println(sb.toString());
+                }
+                System.out.println("-------------------------------------------------------------");
+                TimeUnit.SECONDS.sleep(2);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
