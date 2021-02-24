@@ -52,14 +52,13 @@ public class Montior implements ProducerInterceptor {
                 producerRecord.key(),
                 producerRecord.value()
         );
-        System.out.println("每一次拦截花费的时间："+(System.currentTimeMillis()-start));
+        System.out.println("每一次提交耗时"+(System.currentTimeMillis()-start));
         return newProducerRecord;
     }
 
     @Override
     public void onAcknowledgement(RecordMetadata recordMetadata, Exception e) {
-        count++;
-        System.out.println("调用到的确认的次数上升为"+count);
+
     }
 
     @Override
@@ -69,31 +68,33 @@ public class Montior implements ProducerInterceptor {
 
     @Override
     public void configure(Map<String, ?> map) {
+
+
     }
 
 
 
     //获取对应的topic 每一个队列中未消费的数据数量
     public Map<Integer,Long> montiorTopicMessage(String topic){
-        KafkaConsumer<String, String> consumer = KafkaInfoClient.consumer;
-
-        List<TopicPartition> tps = Optional.ofNullable(consumer.partitionsFor(topic))
-                .orElse(Collections.emptyList())
-                .stream()
-                .map(info -> new TopicPartition(info.topic(), info.partition()))
-                .collect(Collectors.toList());
-        Map<TopicPartition, Long> endOffsets = consumer.endOffsets(tps);
-        Map<Integer,Long> reMap =new HashMap<>();
-        //尝试打印 每一个tp 没有消费的消息数量
-        for (TopicPartition tp : tps) {
-            Long start=0L;
-
-            if(consumer.committed(tp)!=null){
-                start = consumer.committed(tp).offset();//获取即将
+        KafkaMonitorService kafkaMonitorService =new KafkaMonitorService();
+        try(KafkaConsumer<String, String> consumer = KafkaInfoClient.createMonitor();){
+            List<TopicPartition> tps = Optional.ofNullable(consumer.partitionsFor(topic))
+                    .orElse(Collections.emptyList())
+                    .stream()
+                    .map(info -> new TopicPartition(info.topic(), info.partition()))
+                    .collect(Collectors.toList());
+            Map<TopicPartition, Long> endOffsets = consumer.endOffsets(tps);
+            Map<Integer, Long> reMap = new HashMap<>();
+            //尝试打印 每一个tp 没有消费的消息数量
+            for (TopicPartition tp : tps) {
+                Long start = 0L;
+                if (consumer.committed(tp) != null) {
+                    start = consumer.committed(tp).offset();//获取即将
+                }
+                Long end = endOffsets.get(tp);
+                reMap.put(tp.partition(), end - start);
             }
-            Long end = endOffsets.get(tp);
-            reMap.put(tp.partition(),end-start);
+            return reMap;
         }
-        return reMap;
     }
 }

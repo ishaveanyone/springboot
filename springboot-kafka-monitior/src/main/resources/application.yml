@@ -4,7 +4,7 @@ spring:
     # 以逗号分隔的地址列表，用于建立与Kafka集群的初始连接(kafka 默认的端口号为9092)
     bootstrap-servers: 127.0.0.1:9092
     consumer:
-      group-id: test-monitor
+      group-id: test-consumers
     listener:
       ack-mode: manual_immediate
 server:

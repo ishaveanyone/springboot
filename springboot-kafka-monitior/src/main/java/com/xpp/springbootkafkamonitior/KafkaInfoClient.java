@@ -9,25 +9,59 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.requests.MetadataResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Service;
 
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
  * 用于获取kafka 指定topic partion对应的数据情况
  */
-public class KafkaInfoClient{
-    public static  KafkaConsumer<String, String> consumer = new KafkaConsumer<>(new Properties(){{
-       put("bootstrap.servers", "127.0.0.1:9092");
-       put("group.id", "test-monitor");
-       put("enable.auto.commit", "false");
-       put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-       put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-    }});
-    public static void main(String[] args) {
 
+public class KafkaInfoClient{
+//
+//    static Map<Long,KafkaConsumer>  consumerMap = new ConcurrentHashMap<>();
+
+
+
+
+
+    public static KafkaConsumer createMonitor(){
+//       Long threadId = Thread.currentThread().getId();
+////       if(!consumerMap.containsKey(threadId)){
+////           consumerMap.put(threadId,new KafkaConsumer<>(new Properties(){{
+////               put("bootstrap.servers", "127.0.0.1:9092");
+////               put("group.id", "test-consumers");
+////               put("enable.auto.commit", "false");
+////               put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+////               put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+////           }}));
+////       }
+////       return consumerMap.getOrDefault(threadId,new KafkaConsumer<>(new Properties(){{
+////           put("bootstrap.servers", "127.0.0.1:9092");
+////           put("group.id", "test-consumers");
+////           put("enable.auto.commit", "false");
+////           put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+////           put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+////       }}));
+        return new KafkaConsumer<>(new Properties(){{
+           put("bootstrap.servers", "127.0.0.1:9092");
+           put("group.id", "test-consumers");
+           put("enable.auto.commit", "false");
+           put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+           put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+       }});
+    }
+
+
+
+    public static void main(String[] args) {
+        KafkaConsumer<String, String> consumer = createMonitor();
         while (true) {
             try {
                 List<TopicPartition> tps = Optional.ofNullable(consumer.partitionsFor("monitor"))
@@ -43,7 +77,6 @@ public class KafkaInfoClient{
                     if(consumer.committed(tp)!=null){
                         start = consumer.committed(tp).offset();
                     }
-
                     Long begin = beginOffsets.get(tp);//获取即将
                     Long end = endOffsets.get(tp);
                     StringBuffer sb=new StringBuffer();
@@ -58,4 +91,7 @@ public class KafkaInfoClient{
             }
         }
     }
+
+
+
 }
