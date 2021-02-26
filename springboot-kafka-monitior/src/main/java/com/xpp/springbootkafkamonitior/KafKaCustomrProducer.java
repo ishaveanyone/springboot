@@ -24,10 +24,12 @@ public class KafKaCustomrProducer {
     KafkaTemplate kafkaTemplate;
     @GetMapping("/send")
     public void sendMessage(){
+
         //尝试发送
         for(int i=100;i>0;i--){
             kafkaTemplate.send("monitor",i+"");
         }
+//        System.out.println("发送成功。。。。。。");
     }
 
 }

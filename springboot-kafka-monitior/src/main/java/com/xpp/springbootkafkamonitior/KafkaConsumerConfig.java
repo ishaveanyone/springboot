@@ -1,14 +1,18 @@
 package com.xpp.springbootkafkamonitior;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.listener.AbstractMessageListenerContainer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Configuration
@@ -26,7 +30,11 @@ public class KafkaConsumerConfig {
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
-        props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 20);
+//        List<String> interceptors = new ArrayList<>();
+//        interceptors.add("com.xpp.springbootkafkamonitior.Montior");
+//        interceptors.add("com.xpp.springbootkafkamonitior.ConsumerMontiorRedisInterceptor");
+//        props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG,interceptors);
+//        props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 20);
         return props;
     }
 

@@ -9,9 +9,14 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.requests.MetadataResponse;
+import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
+import org.redisson.config.SingleServerConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import redis.clients.jedis.Jedis;
 
 
 import java.util.*;
@@ -60,7 +65,7 @@ public class KafkaInfoClient{
 
 
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         KafkaConsumer<String, String> consumer = createMonitor();
         while (true) {
             try {
@@ -80,7 +85,7 @@ public class KafkaInfoClient{
                     Long begin = beginOffsets.get(tp);//获取即将
                     Long end = endOffsets.get(tp);
                     StringBuffer sb=new StringBuffer();
-                    sb.append(tp.partition() + "待消费的消息数量:" + (end - start)+"     ");
+//                    sb.append(tp.partition() + "待消费的消息数量:" + (end - start)+"     ");
                     sb.append(tp.partition() + "已经收取到的总消息数量 ： " + (end - begin));
                     System.out.println(sb.toString());
                 }
@@ -90,8 +95,20 @@ public class KafkaInfoClient{
                 e.printStackTrace();
             }
         }
-    }
+    }*/
 
+    //实时获取redis中的数据情况
+    public static void main(String[] args) {
+        Jedis jedis = new Jedis("47.102.100.218",8092);
+        // 如果 Redis 服务设置来密码，需要下面这行，没有就不需要
+        jedis.auth("xiaopeng");
+        jedis.select(13);
+        List list = jedis.lrange("kafka-quene_pre_risk_topic",0,-1);
+        for (Object s : list) {
+            System.out.println(s);
+        }
+
+    }
 
 
 }

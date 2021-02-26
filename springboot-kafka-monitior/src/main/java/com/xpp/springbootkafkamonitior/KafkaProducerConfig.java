@@ -26,9 +26,10 @@ public class KafkaProducerConfig {
     public ProducerFactory<String, String> producerFactory() {
         Map<String, Object> props = new HashMap<>(kafkaProperties.buildProducerProperties());
         props.put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, "10485760");
-        /*List<String> interceptors = new ArrayList<>();
-        interceptors.add("com.xpp.springbootkafkamonitior.Montior");
-        props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG,interceptors);*/
+        List<String> interceptors = new ArrayList<>();
+//        interceptors.add("com.xpp.springbootkafkamonitior.Montior");
+        interceptors.add("com.xpp.springbootkafkamonitior.ProducerMontiorRedisInterceptor");
+        props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG,interceptors);
         return new DefaultKafkaProducerFactory<>(props);
     }
 

@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 
 @Service
 //使用生产者拦截器 监控 队列的 阻塞情况
-
+@Deprecated
 public class Montior implements ProducerInterceptor {
 
     static Integer count =0;
