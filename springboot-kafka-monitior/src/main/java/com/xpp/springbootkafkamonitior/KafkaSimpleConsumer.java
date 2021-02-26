@@ -28,7 +28,9 @@ import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadFactory;
@@ -53,12 +55,14 @@ public class KafkaSimpleConsumer {
     @KafkaListener(id = "monitor",topics = "monitor",containerFactory ="monitor_bean" )
     public void consumer1_1(ConsumerRecord<Integer,String> consumerRecord, Acknowledgment acknowledgment) throws InterruptedException {
         acknowledgment.acknowledge();
+        Long start = System.currentTimeMillis();
 //        int message =  Integer.valueOf(consumerRecord.value());
 //        System.out.println(Thread.currentThread().getName());
 //        System.out.println("正在消费。。。。。。"+consumerRecord.partition());
         //使用当前的时间戳用来做 打分结果
 //        TimeUnit.SECONDS.sleep(3);
-        redisTemplate.opsForList().leftPush(quene,consumerRecord.partition());
+//        redisTemplate.opsForList().leftPush(quene,consumerRecord.partition());
+        redisTemplate.opsForZSet().add(quene,consumerRecord.partition(),(System.currentTimeMillis()-start));
     }
 
     // 每秒监控运行状态

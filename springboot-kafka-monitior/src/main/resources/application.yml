@@ -1,8 +1,8 @@
 
 spring:
   redis:
-    port: 8092
-    host: 47.102.100.218
+    port: 6379
+    host: 127.0.0.1
     password: xiaopeng
     database: 13
   kafka:

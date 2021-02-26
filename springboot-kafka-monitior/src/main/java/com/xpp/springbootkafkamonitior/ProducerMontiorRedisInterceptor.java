@@ -14,6 +14,7 @@ import org.redisson.api.RScoredSortedSet;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -29,17 +30,14 @@ public class ProducerMontiorRedisInterceptor implements ProducerInterceptor {
     @Override
     public ProducerRecord onSend(ProducerRecord producerRecord) {
         RedisTemplate redisTemplate = (RedisTemplate) SpringContextUtil.getBean("myRedisTemplate", RedisTemplate.class);
-        List list =   redisTemplate.opsForList().range(quene,0,-1);
-        for (Object o : list) {
-            System.out.print(o+"-");
-        }
-        System.out.println("<-------------------------------->");
-        Integer p =(Integer) redisTemplate.opsForList().rightPop(quene);
-        if(Objects.isNull(p)){
+        Set<ZSetOperations.TypedTuple<Integer>> p = redisTemplate.opsForZSet().reverseRangeWithScores(quene,0,-1);
+
+
+        if(Objects.isNull(p)||p.isEmpty()){
             return producerRecord;
         }else{
             ProducerRecord newProducerRecord = new ProducerRecord(
-                    producerRecord.topic(), p, producerRecord.timestamp(),
+                    producerRecord.topic(), p.iterator().next().getValue(), producerRecord.timestamp(),
                     producerRecord.key(), producerRecord.value()
             );
             return newProducerRecord;
