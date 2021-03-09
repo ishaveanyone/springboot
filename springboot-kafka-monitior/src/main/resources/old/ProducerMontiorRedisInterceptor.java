@@ -3,41 +3,36 @@
  * Author: xupp
  */
 
-package com.xpp.springbootkafkamonitior;
+package com.xpp.springbootkafkamonitior.old;
 
-import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.ProducerInterceptor;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
-import org.apache.kafka.common.TopicPartition;
-import org.redisson.api.RScoredSortedSet;
-import org.redisson.api.RedissonClient;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ZSetOperations;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ProducerMontiorRedisInterceptor implements ProducerInterceptor {
 
 
     String quene="kafka-partitioion-quene";
 
+
+    //定义一段代码实现 zset 的pop操作   使用lua脚本实现
+    private static final String ZSET_LPOP_SCRIPT = "local result = redis.call('ZRANGE', KEYS[1], 0, 0)\n" + "local element = result[1]\n" + "if element then\n" + " redis.call('ZREM', KEYS[1], element)\n" + " return element\n" + "else\n" + " return nil\n" + "end";
+
     //如果发送的消息超过了线程数 会分批次进行onsend 比如 如果100个消息 10个线程 那么会分10个批次 进行执行onsend 然后执行 onAcknowledgement
     @Override
     public ProducerRecord onSend(ProducerRecord producerRecord) {
-        RedisTemplate redisTemplate = (RedisTemplate) SpringContextUtil.getBean("myRedisTemplate", RedisTemplate.class);
-        Set<ZSetOperations.TypedTuple<Integer>> p = redisTemplate.opsForZSet().reverseRangeWithScores(quene,0,-1);
-
-
-        if(Objects.isNull(p)||p.isEmpty()){
+        RedisTemplate redisTemplate = (RedisTemplate) SpringContextUtil.getBean("redisTemplate", RedisTemplate.class);
+        //开启事务
+        Integer  p =  (Integer) redisTemplate.execute(new DefaultRedisScript<>(ZSET_LPOP_SCRIPT, Integer.class), Collections.singletonList(quene));
+        if(Objects.isNull(p)){
             return producerRecord;
         }else{
             ProducerRecord newProducerRecord = new ProducerRecord(
-                    producerRecord.topic(), p.iterator().next().getValue(), producerRecord.timestamp(),
+                    producerRecord.topic(), p, producerRecord.timestamp(),
                     producerRecord.key(), producerRecord.value()
             );
             return newProducerRecord;

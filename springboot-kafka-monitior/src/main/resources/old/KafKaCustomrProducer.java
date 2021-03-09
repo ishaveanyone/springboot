@@ -3,7 +3,7 @@
  * Author: xupp
  */
 
-package com.xpp.springbootkafkamonitior;
+package com.xpp.springbootkafkamonitior.old;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,23 +13,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 @Slf4j
-@Service
-@RestController
+//@Service
+//@RestController
 public class KafKaCustomrProducer {
 
     @Autowired
     KafkaTemplate kafkaTemplate;
+    AtomicInteger integer =new AtomicInteger();
     @GetMapping("/send")
     public void sendMessage(){
-
-        //尝试发送
-        for(int i=100;i>0;i--){
-            kafkaTemplate.send("monitor",i+"");
-        }
-//        System.out.println("发送成功。。。。。。");
+        kafkaTemplate.send("monitor",String.valueOf(integer.incrementAndGet()));
     }
 
 }

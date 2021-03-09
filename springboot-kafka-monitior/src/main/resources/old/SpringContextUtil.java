@@ -3,7 +3,7 @@
  * Author: xupp
  */
 
-package com.xpp.springbootkafkamonitior;
+package com.xpp.springbootkafkamonitior.old;
 
 
 import org.springframework.beans.BeansException;

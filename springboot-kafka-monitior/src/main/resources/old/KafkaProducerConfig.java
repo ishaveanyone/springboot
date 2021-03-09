@@ -1,4 +1,4 @@
-package com.xpp.springbootkafkamonitior;
+package com.xpp.springbootkafkamonitior.old;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +27,8 @@ public class KafkaProducerConfig {
         Map<String, Object> props = new HashMap<>(kafkaProperties.buildProducerProperties());
         props.put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, "10485760");
         List<String> interceptors = new ArrayList<>();
-//        interceptors.add("com.xpp.springbootkafkamonitior.Montior");
-        interceptors.add("com.xpp.springbootkafkamonitior.ProducerMontiorRedisInterceptor");
+//        interceptors.add("com.xpp.springbootkafkamonitior.old.Montior");
+        interceptors.add("com.xpp.springbootkafkamonitior.old.ProducerMontiorRedisInterceptor");
         props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG,interceptors);
         return new DefaultKafkaProducerFactory<>(props);
     }

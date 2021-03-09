@@ -1,10 +1,8 @@
-package com.xpp.springbootkafkamonitior;
+package com.xpp.springbootkafkamonitior.old;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.listener.AbstractMessageListenerContainer;
@@ -12,16 +10,12 @@ import org.springframework.kafka.listener.AbstractMessageListenerContainer;
 import java.util.HashMap;
 import java.util.Map;
 
-@Configuration
+//@Configuration
 public class KafkaConsumerConfig {
     @Value("${spring.kafka.bootstrap-servers}")
     String bootstrap;
     @Value("${spring.kafka.consumer.group-id}")
     String groupId;
-    @Autowired
-    RebalanceMonitor rebalanceMonitor;
-
-
 
     private Map<String, Object> consumerProps() {
         Map<String, Object> props = new HashMap<>();
@@ -31,18 +25,20 @@ public class KafkaConsumerConfig {
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
+//        props.put(ConsumerConfig., groupId);
+//        List<String> interceptors = new ArrayList<>();
+//        interceptors.add("com.xpp.springbootkafkamonitior.old.Montior");
+//        interceptors.add("com.xpp.springbootkafkamonitior.old.ConsumerMontiorRedisInterceptor");
+//        props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG,interceptors);
+//        props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 20);
         return props;
     }
 
-    public ConcurrentKafkaListenerContainerFactory consumerContainerFactory(){
+    public ConcurrentKafkaListenerContainerFactory getContainerFactory(){
         ConcurrentKafkaListenerContainerFactory factory = new ConcurrentKafkaListenerContainerFactory();
         factory.setConsumerFactory(new DefaultKafkaConsumerFactory(consumerProps()));
         factory.getContainerProperties().setAckMode(AbstractMessageListenerContainer.AckMode.MANUAL_IMMEDIATE);
-        factory.getContainerProperties().setConsumerRebalanceListener(rebalanceMonitor);
+        factory.getContainerProperties().setConsumerRebalanceListener(new ConsumerRebalanceMonitor());
         return factory;
     }
-
-
-
-
 }
