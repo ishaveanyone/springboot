@@ -20,14 +20,47 @@ public class SpringBootStartListener implements ApplicationListener<ApplicationR
 
         //刷新数据到本地的log中
         try {
-            File file = new File("H:/1.log");
+            File file = new File("H:/1");
             if(!file.exists()){
                 return;
             }
             FileInputStream in =new FileInputStream(file);
             int count = in.available();
             byte[] bytes=new byte[count];
-//            KafKaSimpleProducer.queue.addAll((LinkedBlockingQueue<String>)SerializationUtils.deserialize(bytes));
+            KafKaSimpleProducer.queue.addAll((LinkedBlockingQueue<String>)SerializationUtils.deserialize(bytes));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
+        try {
+
+            LinkedBlockingQueue<String> queue  =   KafKaSimpleProducer.queue;
+            queue.add("cs");
+            byte[] bytes =  SerializationUtils.serialize(queue);
+            try {
+                FileOutputStream  out =new FileOutputStream(new File("H:/1"));
+                out.write(bytes);
+                out.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+
+            File file = new File("H:/1");
+            if(!file.exists()){
+                return;
+            }
+            FileInputStream in =new FileInputStream(file);
+            int count = in.available();
+            byte[] bytes2=new byte[count];
+            LinkedBlockingQueue queue2 =
+                    (LinkedBlockingQueue<String>)SerializationUtils.deserialize(bytes);
+            System.out.println(queue2.size());
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

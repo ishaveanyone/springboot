@@ -24,7 +24,7 @@ public class SpringBootStopListenner implements ApplicationListener<ContextClose
         LinkedBlockingQueue<String> queue  =   KafKaSimpleProducer.queue;
         byte[] bytes =  SerializationUtils.serialize(queue);
         try {
-            FileOutputStream  out =new FileOutputStream(new File("H:/1.log"));
+            FileOutputStream  out =new FileOutputStream(new File("H:/1"));
             out.write(bytes);
             out.flush();
         } catch (IOException e) {

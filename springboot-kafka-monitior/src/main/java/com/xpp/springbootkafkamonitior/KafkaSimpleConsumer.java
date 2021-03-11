@@ -8,6 +8,8 @@ package com.xpp.springbootkafkamonitior;
 import jdk.internal.org.objectweb.asm.tree.IincInsnNode;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -74,7 +76,11 @@ public class KafkaSimpleConsumer implements Runnable {
     public void listenRedis(){
         Thread thread =new Thread(this);
         thread.start();
+
+
     }
+
+
 
 
     @Bean("consumer_bean")
@@ -89,7 +95,6 @@ public class KafkaSimpleConsumer implements Runnable {
     @Override
     public void run() {
         while(true){
-            Long start =System.currentTimeMillis();
             //阻塞在这里 然后进行发送
             try {
                 String message =  KafKaSimpleProducer.queue.poll(10,TimeUnit.SECONDS);
@@ -108,7 +113,7 @@ public class KafkaSimpleConsumer implements Runnable {
 //    @Scheduled(fixedDelay = 1)
 //    public void pull(){
 //        int partition = redisForLua.blpop("partitions");
-//        kafkaTemplate.send("consumer", partition ,KafKaSimpleProducer.queue.poll());
+//        kafkaTemplate.send("consumer", partition ,KafKaSimpsleProducer.queue.poll());
 //    }
 
 
@@ -127,31 +132,5 @@ public class KafkaSimpleConsumer implements Runnable {
     }
 
 
-    //机器监控
-    Map<Integer,Integer> map = new ConcurrentHashMap<>();
-    @Scheduled(cron ="0/1 * * * * ?")
-    public void montiot(){
-        if(!RebalanceMonitor.mark){
-            return;
-        }
-        List list= redisTemplate.opsForList().range("partitions",0,-1);
-        for (Integer integer : RebalanceMonitor.s) {
-            if(!list.contains(integer)){
-                map.putIfAbsent(integer,map.getOrDefault(integer,1));
-            }else{
-                map.remove(integer);
-            }
-        }
-        Iterator<Integer> iterator = map.keySet().iterator();
-        while(iterator.hasNext()) {
-            Integer  key = iterator.next();
-            Integer value = map.get(key);
-            if(value==120){
-                //重新放回丢列
-                redisForLua.listCasPush("partitions",key);
-                map.remove(key);
-            }
 
-        }
-    }
 }

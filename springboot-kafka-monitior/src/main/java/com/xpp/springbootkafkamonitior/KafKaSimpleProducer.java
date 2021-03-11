@@ -42,10 +42,10 @@ public class KafKaSimpleProducer {
 
     @Scheduled(cron = "0/1 * * * * ?")
     public void sendMessage(){
-        //如果quene大于一定数据的时候我把这个数据存放到mysql 或者存放到 改变存数据的方案
-//        System.out.println("未消费的数据:"+queue.size());
-        for(int i=0;i<1000;i++) {
-            queue.add(port + "-" + System.currentTimeMillis());
+        //如果本地比较小那应该使用
+        if(queue.size()<100){
+            //假如 quene 队列大小超过了一定的数量 说明 已经照成很严重的堵塞情况了
+
         }
     }
 
